@@ -59,22 +59,23 @@ function createButtons() {
             else {
                 switch (buttonNumber) {
                     case 1:
-                        button.textContent = "0";
+                        button.textContent = "C";
                         break;
 
                     case 2:
-                        button.setAttribute("class", "button enter");
-                        button.textContent = "ENTER";
+                        button.textContent = "0";
                         break;
 
                     case 3:
+                        button.textContent = "=";
+                        break;
+
+                    case 4:
                         button.textContent = "/";
                         break;
                 }
             }
-            if (rowNumber != 4 || buttonNumber != 4) {
-                row.appendChild(button);
-            }
+            row.appendChild(button);
         }
         buttons.appendChild(row);
     }
