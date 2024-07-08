@@ -29,6 +29,7 @@ let operate = (a, op, b) => {
 
 function createButtons() {
     let numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let numberNames = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
     for (let rowNumber = 1; rowNumber < 6; rowNumber++) {
         const row = document.createElement("div");
@@ -77,6 +78,7 @@ function createButtons() {
 
                 else {
                     button.textContent = numberArray.shift();
+                    button.setAttribute("class", `button ${numberNames.shift()}`);
                 }
             }
 
@@ -89,6 +91,7 @@ function createButtons() {
 
                     case 2:
                         button.textContent = "0";
+                        button.setAttribute("class", "button zero");
                         break;
 
                     case 3:
@@ -122,149 +125,146 @@ function buttonClicked(ev) {
     let numArray;
     let delChar;
     let target = ev.target;
-    let targetClass = target.getAttribute("class");
+    let targetClass = target.getAttribute("class").split(" ").at(-1);
+    console.log(targetClass);
 
     if (targetClass != "buttons"
         && targetClass != "buttonRow"
-        && targetClass.includes("button")
         && text.value.length < 20) {
-            if (targetClass.includes("ac")) {
-                clearVariables();
-            }
+        if (targetClass == "ac") {
+            clearVariables();
+        }
 
-            else if (targetClass == "button del") {
-                if (text.value == "SERIOUSLY!?") {
-                    clearVariables()
-                }
-                
-                else {
-                    textArray = text.value.split("");
-                    delChar = textArray.pop();
-    
-                    if (delChar == ".") {
-                        periodActive = true;
-                        periodHistory = false;
-    
-                        if (operationHistory) {
-                            numArray = secondNumber.split("");
-                            numArray.pop();
-                            secondNumber = numArray.join("");
-                        }
-    
-                        else {
-                            numArray = firstNumber.split("");
-                            numArray.pop();
-                            firstNumber = numArray.join("");
-                        }
-                    }
-    
-                    else if (NUMBERS.includes(delChar)) {
-                        if (operationHistory) {
-                            numArray = secondNumber.split("");
-                            numArray.pop();
-                            secondNumber = numArray.join("");
-    
-                            if (!secondNumber.length) {
-                                periodActive = false;
-                                periodHistory = false;
-                                operationActive = false;
-                            }
-                        }
-    
-                        else {
-                            numArray = firstNumber.split("");
-                            numArray.pop();
-                            firstNumber = numArray.join("");
-    
-                            if (!firstNumber.length) {
-                                periodActive = false;
-                                periodHistory = false;
-                                operationActive = false;
-                            }
-                        }
-                    }
-    
-                    else {
-                        operationActive = true;
-                        operationHistory = false;
-                    }
-    
-                    text.value = textArray.join("");
-                }
+        else if (targetClass == "del") {
+            if (text.value == "SERIOUSLY!?") {
+                clearVariables()
             }
 
             else {
-                if (targetClass == "button") {
-                    if (text.value != "SERIOUSLY!?") {
-                        text.value += target.textContent;
-                    }
-                    else {
-                        clearVariables();
-                        text.value += target.textContent;
-                    }
+                textArray = text.value.split("");
+                delChar = textArray.pop();
+
+                if (delChar == ".") {
+                    periodActive = true;
+                    periodHistory = false;
 
                     if (operationHistory) {
-                        secondNumber += target.textContent;
-                        equalActive = true;
+                        numArray = secondNumber.split("");
+                        numArray.pop();
+                        secondNumber = numArray.join("");
                     }
 
                     else {
-                        firstNumber += target.textContent;
-                    }
-
-                    operationActive = true;
-                    
-                    if (!periodHistory) {
-                        periodActive = true;
+                        numArray = firstNumber.split("");
+                        numArray.pop();
+                        firstNumber = numArray.join("");
                     }
                 }
 
-                else if (targetClass.includes("period") && periodActive) {
-                    operationHistory ? secondNumber += "." : firstNumber += ".";
-                    text.value += "."
-                    periodActive = false;
-                    periodHistory = true;
-                }
+                else if (NUMBERS.includes(delChar)) {
+                    if (operationHistory) {
+                        numArray = secondNumber.split("");
+                        numArray.pop();
+                        secondNumber = numArray.join("");
 
-                else if (targetClass.includes("button")
-                    && !targetClass.includes("enter")
-                    && !targetClass.includes("period")
-                    && operationActive) {
-                        if (operationHistory) {
-                            firstNumber = operate(firstNumber, operator, secondNumber);
-                            
-                            if (firstNumber != "SERIOUSLY!?") {
-                                secondNumber = "";
-                                operator = target.textContent;
-                                text.value = firstNumber + target.textContent;
-                                operationActive = false;
-                                equalActive = false;
-                            }
-
-                            else {
-                                text.value = firstNumber;
-                            }
-                        }
-                        else {
-                            text.value += target.textContent;
-                            operator = target.textContent;
+                        if (!secondNumber.length) {
+                            periodActive = false;
+                            periodHistory = false;
                             operationActive = false;
-                            operationHistory = true;
                         }
-                        periodHistory = false;
                     }
 
-                else if (targetClass == "button enter" && equalActive) {
-                    firstNumber = operate(firstNumber, operator, secondNumber);
-                    operator = "";
-                    secondNumber = "";
-                    text.value = firstNumber;
+                    else {
+                        numArray = firstNumber.split("");
+                        numArray.pop();
+                        firstNumber = numArray.join("");
+
+                        if (!firstNumber.length) {
+                            periodActive = false;
+                            periodHistory = false;
+                            operationActive = false;
+                        }
+                    }
+                }
+
+                else {
+                    operationActive = true;
                     operationHistory = false;
-                    equalActive = false;
-                    periodHistory = false;
+                }
+
+                text.value = textArray.join("");
+            }
+        }
+
+        else {
+            if (NAMES.includes(targetClass)) {
+                if (text.value != "SERIOUSLY!?") {
+                    text.value += target.textContent;
+                }
+                else {
+                    clearVariables();
+                    text.value += target.textContent;
+                }
+
+                if (operationHistory) {
+                    secondNumber += target.textContent;
+                    equalActive = true;
+                }
+
+                else {
+                    firstNumber += target.textContent;
+                }
+
+                operationActive = true;
+
+                if (!periodHistory) {
                     periodActive = true;
                 }
             }
+
+            else if (targetClass == "period" && periodActive) {
+                operationHistory ? secondNumber += "." : firstNumber += ".";
+                text.value += "."
+                periodActive = false;
+                periodHistory = true;
+            }
+
+            else if (SYMBOLS.includes(targetClass) && operationActive) {
+                if (operationHistory) {
+                    firstNumber = operate(firstNumber, operator, secondNumber);
+
+                    if (firstNumber != "SERIOUSLY!?") {
+                        secondNumber = "";
+                        operator = target.textContent;
+                        text.value = firstNumber + target.textContent;
+                        operationActive = false;
+                        equalActive = false;
+                    }
+
+                    else {
+                        text.value = firstNumber;
+                    }
+                }
+                else {
+                    text.value += target.textContent;
+                    operator = target.textContent;
+                    operationActive = false;
+                    operationHistory = true;
+                }
+                periodHistory = false;
+            }
+
+            else if (targetClass == "enter" && equalActive) {
+                firstNumber = operate(firstNumber, operator, secondNumber);
+                operator = "";
+                secondNumber = "";
+                text.value = firstNumber;
+                operationHistory = false;
+                equalActive = false;
+                periodHistory = false;
+                periodActive = true;
+            }
+        }
     }
 }
 
@@ -280,11 +280,73 @@ function clearVariables() {
     periodHistory = false;
 }
 
+function keyInput(ev) {
+    switch (ev.key) {
+        case "0":
+            document.querySelector(".zero").click();
+            break;
+        case "1":
+            document.querySelector(".one").click();
+            break;
+        case "2":
+            document.querySelector(".two").click();
+            break;
+        case "3":
+            document.querySelector(".three").click();
+            break;
+        case "4":
+            document.querySelector(".four").click();
+            break;
+        case "5":
+            document.querySelector(".five").click();
+            break;
+        case "6":
+            document.querySelector(".six").click();
+            break;
+        case "7":
+            document.querySelector(".seven").click();
+            break;
+        case "8":
+            document.querySelector(".eight").click();
+            break;
+        case "9":
+            document.querySelector(".nine").click();
+            break;
+        case ".":
+            document.querySelector(".period").click();
+            break;
+        case "Enter":
+            document.querySelector(".enter").click();
+            break;
+        case "Delete":
+            document.querySelector(".ac").click();
+            break;
+        case "Backspace":
+            document.querySelector(".del").click();
+            break;
+        case "+":
+            document.querySelector(".plus").click();
+            break;
+        case "-":
+            document.querySelector(".minus").click();
+            break;
+        case "*":
+            document.querySelector(".multiply").click();
+            break;
+        case "/":
+            document.querySelector(".divide").click();
+            break;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", createButtons);
+document.addEventListener("keyup", (event) => keyInput(event));
 
 const buttons = document.querySelector(".buttons");
 const text = document.querySelector(".displayText");
 const NUMBERS = "01233456789";
+const NAMES = "onetwothreefourfivesixseveneightninezero";
+const SYMBOLS = "plusminusmultiplydivide";
 let operationActive = false;
 let operationHistory = false;
 let equalActive = false;
