@@ -1,24 +1,29 @@
-let add = (a, b) => a + b;
-let subtract = (a, b) => a - b;
-let multiply = (a, b) => a * b;
-let divide = (a, b) => a / b;
+let add = (a, b) => Math.round((a + b) * 100) / 100;
+let subtract = (a, b) => Math.round((a - b) * 100) / 100;
+let multiply = (a, b) => Math.round((a * b) * 100) / 100;
+let divide = (a, b) => {
+    if (b != 0) {
+        return Math.round((a / b) * 100) / 100;
+    }
+    else {
+        return "SERIOUSLY!?";
+    }
+};
 let operate = (a, op, b) => {
+    a = Number(a);
+    b = Number(b);
     switch (op) {
         case "+":
-            add(a, b);
-            break;
+            return String(add(a, b));
 
         case "-":
-            subtract(a, b);
-            break;
+            return String(subtract(a, b));
 
         case "*":
-            multiply(a, b);
-            break;
+            return String(multiply(a, b));
 
         case "/":
-            divide(a, b);
-            break;
+            return String(divide(a, b));
     }
 }
 
@@ -71,6 +76,7 @@ function createButtons() {
 
                     case 3:
                         button.textContent = "=";
+                        button.setAttribute("class", "button enter");
                         break;
 
                     case 4:
@@ -94,15 +100,88 @@ function buttonClicked(ev) {
         && targetClass.includes("button")
         && text.value.length < 20) {
             if (targetClass.includes("ac")) {
-                text.value = "";
+                clearVariables();
             }
             else {
-                text.value += target.textContent;
+                if (targetClass == "button") {
+                    if (text.value != "SERIOUSLY!?") {
+                        text.value += target.textContent;
+                    }
+                    else {
+                        clearVariables();
+                        text.value += target.textContent;
+                    }
+
+                    if (operationHistory) {
+                        secondNumber += target.textContent;
+                        equalActive = true;
+                    }
+
+                    else {
+                        firstNumber += target.textContent;
+                    }
+
+                    operationActive = true;
+                }
+
+                else if (targetClass.includes("button")
+                    && !targetClass.includes("enter")
+                    && operationActive) {
+                        if (operationHistory) {
+                            firstNumber = operate(firstNumber, operator, secondNumber);
+                            
+                            if (firstNumber != "SERIOUSLY!?") {
+                                secondNumber = "";
+                                operator = target.textContent;
+                                text.value = firstNumber + target.textContent;
+                                operationActive = false;
+                                equalActive = false;
+                            }
+
+                            else {
+                                text.value = firstNumber;
+                            }
+                        }
+                        else {
+                            text.value += target.textContent;
+                            operator = target.textContent;
+                            operationActive = false;
+                            operationHistory = true;
+                        }
+                    }
+
+                else if (targetClass == "button enter" && equalActive) {
+                    firstNumber = operate(firstNumber, operator, secondNumber);
+                    operator = "";
+                    secondNumber = "";
+                    text.value = firstNumber;
+                    operationActive = false;
+                    operationHistory = false;
+                    equalActive = false;
+                }
             }
     }
 }
 
+function clearVariables() {
+    text.value = "";
+    firstNumber = "";
+    secondNumber = "";
+    operator = "";
+    operationActive = false;
+    operationHistory = false;
+    equalActive = false;
+}
+
 document.addEventListener("DOMContentLoaded", createButtons);
+
 const buttons = document.querySelector(".buttons");
 const text = document.querySelector(".displayText");
+let operationActive = false;
+let operationHistory = false;
+let equalActive = false;
+let firstNumber = "";
+let operator = "";
+let secondNumber = "";
+
 buttons.addEventListener("click", (event) => buttonClicked(event));
