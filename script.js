@@ -118,6 +118,9 @@ function createButtons() {
 }
 
 function buttonClicked(ev) {
+    let textArray;
+    let numArray;
+    let delChar;
     let target = ev.target;
     let targetClass = target.getAttribute("class");
 
@@ -128,6 +131,68 @@ function buttonClicked(ev) {
             if (targetClass.includes("ac")) {
                 clearVariables();
             }
+
+            else if (targetClass == "button del") {
+                if (text.value == "SERIOUSLY!?") {
+                    clearVariables()
+                }
+                
+                else {
+                    textArray = text.value.split("");
+                    delChar = textArray.pop();
+    
+                    if (delChar == ".") {
+                        periodActive = true;
+                        periodHistory = false;
+    
+                        if (operationHistory) {
+                            numArray = secondNumber.split("");
+                            numArray.pop();
+                            secondNumber = numArray.join("");
+                        }
+    
+                        else {
+                            numArray = firstNumber.split("");
+                            numArray.pop();
+                            firstNumber = numArray.join("");
+                        }
+                    }
+    
+                    else if (NUMBERS.includes(delChar)) {
+                        if (operationHistory) {
+                            numArray = secondNumber.split("");
+                            numArray.pop();
+                            secondNumber = numArray.join("");
+    
+                            if (!secondNumber.length) {
+                                periodActive = false;
+                                periodHistory = false;
+                                operationActive = false;
+                            }
+                        }
+    
+                        else {
+                            numArray = firstNumber.split("");
+                            numArray.pop();
+                            firstNumber = numArray.join("");
+    
+                            if (!firstNumber.length) {
+                                periodActive = false;
+                                periodHistory = false;
+                                operationActive = false;
+                            }
+                        }
+                    }
+    
+                    else {
+                        operationActive = true;
+                        operationHistory = false;
+                    }
+    
+                    text.value = textArray.join("");
+                }
+            }
+
             else {
                 if (targetClass == "button") {
                     if (text.value != "SERIOUSLY!?") {
@@ -219,6 +284,7 @@ document.addEventListener("DOMContentLoaded", createButtons);
 
 const buttons = document.querySelector(".buttons");
 const text = document.querySelector(".displayText");
+const NUMBERS = "01233456789";
 let operationActive = false;
 let operationHistory = false;
 let equalActive = false;
