@@ -196,6 +196,8 @@ function buttonClicked(ev) {
                     text.value = firstNumber;
                     operationHistory = false;
                     equalActive = false;
+                    periodHistory = false;
+                    periodActive = true;
                 }
             }
     }
