@@ -24,7 +24,6 @@ let operate = (a, op, b) => {
 
 function createButtons() {
     let numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const buttons = document.querySelector(".buttons");
 
     for (let rowNumber = 1; rowNumber < 5; rowNumber++) {
         const row = document.createElement("div");
@@ -39,14 +38,17 @@ function createButtons() {
                     switch (rowNumber) {
                         case 1:
                             button.textContent = "+";
+                            button.setAttribute("class", "button plus");
                             break;
 
                         case 2:
                             button.textContent = "-";
+                            button.setAttribute("class", "button minus");
                             break;
 
                         case 3:
                             button.textContent = "*";
+                            button.setAttribute("class", "button multiply");
                             break;
                     }
                 }
@@ -59,7 +61,8 @@ function createButtons() {
             else {
                 switch (buttonNumber) {
                     case 1:
-                        button.textContent = "C";
+                        button.textContent = "AC";
+                        button.setAttribute("class", "button ac");
                         break;
 
                     case 2:
@@ -72,6 +75,7 @@ function createButtons() {
 
                     case 4:
                         button.textContent = "/";
+                        button.setAttribute("class", "button divide");
                         break;
                 }
             }
@@ -81,4 +85,24 @@ function createButtons() {
     }
 }
 
+function buttonClicked(ev) {
+    let target = ev.target;
+    let targetClass = target.getAttribute("class");
+
+    if (targetClass != "buttons"
+        && targetClass != "buttonRow"
+        && targetClass.includes("button")
+        && text.value.length < 20) {
+            if (targetClass.includes("ac")) {
+                text.value = "";
+            }
+            else {
+                text.value += target.textContent;
+            }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", createButtons);
+const buttons = document.querySelector(".buttons");
+const text = document.querySelector(".displayText");
+buttons.addEventListener("click", (event) => buttonClicked(event));
