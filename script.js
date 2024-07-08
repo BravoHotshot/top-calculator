@@ -155,7 +155,6 @@ function buttonClicked(ev) {
                     operator = "";
                     secondNumber = "";
                     text.value = firstNumber;
-                    operationActive = false;
                     operationHistory = false;
                     equalActive = false;
                 }
