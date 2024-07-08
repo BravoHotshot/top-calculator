@@ -95,3 +95,27 @@ input {
     border-radius: 20%;
     color: white;
 }
+
+.ac, .del {
+    width: 45%;
+}
+
+.ac {
+    background-color: blueviolet;
+}
+
+.del {
+    background-color: brown;
+}
+
+.plus, .minus, .multiply, .divide {
+    background-color: darkcyan;
+}
+
+.period {
+    background-color: darkmagenta;
+}
+
+.enter {
+    background-color: darkolivegreen;
+}
