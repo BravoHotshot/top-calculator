@@ -5,7 +5,7 @@
 
 * {
     box-sizing: border-box;
-    font-family: customFont;
+    font-family: customFont, sans-serif;
     font-size: 35px;
 }
 
